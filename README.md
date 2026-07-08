@@ -8,7 +8,7 @@ this is just a fun thing. commit names are stupid and vary. i don't take this pr
 
 ## live view
 
-[Join the server](https://discord.gg/yQvZ69fsm3)  [#fnf-hotline](https://discord.com/channels/1447703759638626327/1524145705936097351)
+[#funkin-hotline](https://discord.com/channels/1447703759638626327/1524145705936097351)
 
 ## structure
 
