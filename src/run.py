@@ -8,13 +8,9 @@ def main():
     new_state = get_state_key(mods)
     prev_state = get_state()
 
-    try:
-        discord_ids = post_to_discord(mods, prev_state or {})
-        new_state.update(discord_ids)
-        print('[ok] discord')
-    except Exception as e:
-        print(f'[err] discord: {e}')
-
+    discord_ids = post_to_discord(mods, prev_state or {})
+    new_state.update(discord_ids)
+    print('[ok] discord')
     save_state(new_state)
     print('[done] state saved')
 

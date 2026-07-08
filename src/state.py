@@ -1,7 +1,7 @@
 import json
 import os
 
-STATE_PATH = os.path.join(os.path.dirname(__file__), 'state.json')
+STATE_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'state.json')
 
 def get_state():
     try:

@@ -114,7 +114,12 @@ def post_to_discord(mods, prev_state):
         filename = f'collage_{period}.png'
         existing_id = prev_state.get(f'discord_{period}') if prev_state else None
 
-        msg_id = _send(period, period_mods, filename, existing_id, base)
+        try:
+            msg_id = _send(period, period_mods, filename, existing_id, base)
+        except Exception as e:
+            print(f'[warn] failed to post {period}: {e}')
+            msg_id = existing_id
+
         message_ids[f'discord_{period}'] = msg_id
 
     return message_ids
