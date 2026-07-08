@@ -2,9 +2,13 @@
 
 ![banner](assets/banner.png)
 
-Posts the top FNF mods from GameBanana to a Discord channel every 30 minutes. Shows the best mods of all time, year, 6 months, 3 months, month, week, and today with a little image collage.
+Posts the top FNF mods from GameBanana to a Discord channel every 2 hours. Shows the best mods of all time, year, 6 months, 3 months, month, week, and today with a little image collage.
 
 this is just a fun thing. commit names are stupid and vary. i don't take this project seriously.
+
+## live view
+
+[Join the server](https://discord.gg/yQvZ69fsm3)  [#fnf-hotline](https://discord.com/channels/1447703759638626327/1524145705936097351)
 
 ## structure
 
