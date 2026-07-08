@@ -1,4 +1,4 @@
-name: FNF Mod Rankings
+name: Funkin Mod Rankings
 
 on:
   schedule:
@@ -23,7 +23,7 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
       - run: |
-          git config user.name "FNF Bot"
+          git config user.name "Funkin Bot"
           git config user.email "bot@users.noreply.github.com"
           git add -A state.json
           git diff --staged --quiet || git commit -m "chore: update state"

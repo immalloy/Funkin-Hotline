@@ -1,4 +1,4 @@
-# FNF Hotline
+# Funkin Hotline
 
 ![banner](assets/banner.png)
 
@@ -22,7 +22,7 @@ this is just a fun thing. commit names are stupid and vary. i don't take this pr
 1. **Fork** this repo on GitHub
 2. **Create a Discord webhook** in your server channel → copy the URL
 3. Go to your fork → **Settings → Secrets and variables → Actions** → add `DISCORD_WEBHOOK_URL` with your webhook URL
-4. Go to **Actions** tab → enable workflows → run "FNF Mod Rankings" manually to test
+4. Go to **Actions** tab → enable workflows → run "Funkin Mod Rankings" manually to test
 5. It'll auto-run every 30 minutes after that
 
 ### reset state

@@ -6,7 +6,7 @@ from urllib.error import HTTPError
 from gamebanana import PERIODS, get_label, get_color
 from collage import create_collage
 
-UA = 'FNF-Hotline/1.0'
+UA = 'Funkin-Hotline/1.0'
 MEDALS = ['\U0001f947', '\U0001f948', '\U0001f949']
 
 def _esc(s):
@@ -30,7 +30,7 @@ def _build_embed(period, mods, attachment_name=None):
         'title': f'{label["emoji"]} {label["name"]}',
         'description': '\n'.join(lines),
         'color': get_color(period),
-        'footer': {'text': 'FNF Hotline'},
+        'footer': {'text': 'Funkin Hotline'},
         'timestamp': __import__('datetime').datetime.now().isoformat() + 'Z',
     }
     if attachment_name:
@@ -88,9 +88,9 @@ def _send(period, period_mods, filename, existing_id, base):
 
     if not msg_id:
         if image_bytes:
-            req = _req_multipart(f'{base}?wait=true', {'embeds': [embed], 'username': 'FNF Hotline'}, image_bytes, filename)
+            req = _req_multipart(f'{base}?wait=true', {'embeds': [embed], 'username': 'Funkin Hotline'}, image_bytes, filename)
         else:
-            req = _req(f'{base}?wait=true', {'embeds': [embed], 'username': 'FNF Hotline'})
+            req = _req(f'{base}?wait=true', {'embeds': [embed], 'username': 'Funkin Hotline'})
         with urllib.request.urlopen(req, timeout=15) as resp:
             result = json.loads(resp.read())
             msg_id = result['id']

@@ -1,7 +1,7 @@
 import io
 import urllib.request
 
-UA = 'FNF-Hotline/1.0'
+UA = 'Funkin-Hotline/1.0'
 
 try:
     from PIL import Image

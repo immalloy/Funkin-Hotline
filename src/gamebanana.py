@@ -27,7 +27,7 @@ COLORS = {
 }
 
 def fetch_top_subs():
-    req = urllib.request.Request(TOP_SUBS_URL, headers={'User-Agent': 'FNF-Hotline/1.0'})
+    req = urllib.request.Request(TOP_SUBS_URL, headers={'User-Agent': 'Funkin-Hotline/1.0'})
     with urllib.request.urlopen(req, timeout=15) as resp:
         data = json.loads(resp.read())
 
