@@ -2,14 +2,16 @@
 
 ![banner](assets/banner.png)
 
-Posts the top FNF mods from GameBanana to a Discord channel every 2 hours. Shows the best mods of all time, year, 6 months, 3 months, month, week, and today with a little image collage.
+Posts the top FNF mods from GameBanana to a Discord channel every 2 hours — all time, year, 6 months, 3 months, month, week, and today.
 
 ![embed preview](assets/embed_preview.png)
 
-this is just a fun thing. commit names are stupid and vary. i don't take this project seriously.
+> this is just a fun thing. commit names are stupid and vary. i don't take this project seriously.
 
-- [setup](docs/setup.md) - how to fork, deploy, and reset state
-- [config](docs/config.md) - enable/disable periods, rename, recolor, blacklist terms
+## docs
+
+- **[setup](docs/setup.md)** — how to fork, deploy, and reset state
+- **[config](docs/config.md)** — enable/disable periods, rename, recolor, blacklist terms
 
 ## live view
 
