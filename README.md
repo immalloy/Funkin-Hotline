@@ -8,8 +8,8 @@ Posts the top FNF mods from GameBanana to a Discord channel every 2 hours. Shows
 
 this is just a fun thing. commit names are stupid and vary. i don't take this project seriously.
 
-- [setup](docs/setup.md) — how to fork, deploy, and reset state
-- [config](docs/config.md) — enable/disable periods, rename, recolor, blacklist terms
+- [setup](docs/setup.md) - how to fork, deploy, and reset state
+- [config](docs/config.md) - enable/disable periods, rename, recolor, blacklist terms
 
 ## live view
 
