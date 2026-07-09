@@ -1,7 +1,7 @@
 import sys
 sys.path.insert(0, __file__ + '/../..')
 
-from src.gamebanana import PERIODS, LABELS, COLORS, MAX_PER_PERIOD, TOP_SUBS_URL, _load_config
+from src.gamebanana import PERIODS, LABELS, COLORS, MAX_PER_PERIOD, TOP_SUBS_URL
 import json, urllib.request
 
 # Show current config

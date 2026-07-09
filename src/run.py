@@ -1,10 +1,10 @@
 import argparse
 import os
 import sys
-import time
 from gamebanana import fetch_top_subs, get_state_key, PERIODS
 from discord import post_to_discord
 from collage import create_collage
+from scheduler import run_forever
 from state import get_state, save_state
 
 def parse_args():
@@ -71,18 +71,7 @@ def main():
         run_once(args)
         return
 
-    if args.interval_hours <= 0:
-        raise ValueError('--interval-hours must be greater than zero')
-
-    interval_seconds = args.interval_hours * 60 * 60
-    print(f'[ok] loop started; running every {args.interval_hours:g} hour(s)')
-    while True:
-        try:
-            run_once(args)
-        except Exception as exc:
-            print(f'[fatal] run failed: {exc}', file=sys.stderr)
-        print(f'[ok] next run in {args.interval_hours:g} hour(s)')
-        time.sleep(interval_seconds)
+    run_forever(lambda: run_once(args), args.interval_hours)
 
 if __name__ == '__main__':
     try:

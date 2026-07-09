@@ -1,28 +1,13 @@
-import json
-import os
 import urllib.request
+try:
+    from config import load_period_config
+except ImportError:  # Also support imports through the src package.
+    from src.config import load_period_config
 
 GAME_ID = 8694
 TOP_SUBS_URL = f'https://gamebanana.com/apiv12/Game/{GAME_ID}/TopSubs'
 
-_config_path = os.path.join(os.path.dirname(__file__), '..', 'config.json')
-
-def _load_config():
-    with open(_config_path, encoding='utf-8') as f:
-        cfg = json.load(f)
-
-    periods = []
-    labels = {}
-    colors = {}
-    for key, opts in cfg['periods'].items():
-        if opts.get('enabled', True):
-            periods.append(key)
-            labels[key] = {'emoji': opts['emoji'], 'name': opts['name']}
-            colors[key] = int(opts['color'].lstrip('#'), 16)
-
-    return periods, labels, colors, cfg.get('max_per_period', 3), cfg.get('blacklist', []), cfg.get('show_flagged_content', False)
-
-PERIODS, LABELS, COLORS, MAX_PER_PERIOD, BLACKLIST, SHOW_FLAGGED = _load_config()
+PERIODS, LABELS, COLORS, MAX_PER_PERIOD, BLACKLIST, SHOW_FLAGGED = load_period_config()
 
 def _is_blacklisted(mod):
     name = (mod.get('_sName') or '').lower()
