@@ -65,8 +65,8 @@ def _req_multipart(url, fields, image_bytes, filename, method='POST'):
     }
     return urllib.request.Request(url, data=body, headers=headers, method=method)
 
-def _send(period, period_mods, filename, existing_id, base):
-    image_buf = create_collage(period_mods)
+def _send(period, period_mods, filename, existing_id, base, verbose=False):
+    image_buf = create_collage(period_mods, verbose=verbose)
     image_bytes = image_buf.read() if image_buf else None
 
     embed = _build_embed(period, period_mods, filename if image_bytes else None)
@@ -97,7 +97,7 @@ def _send(period, period_mods, filename, existing_id, base):
 
     return msg_id
 
-def post_to_discord(mods, prev_state):
+def post_to_discord(mods, prev_state, verbose=False):
     wh_url = os.environ.get('DISCORD_WEBHOOK_URL')
     if not wh_url:
         return {}
@@ -115,9 +115,9 @@ def post_to_discord(mods, prev_state):
         existing_id = prev_state.get(f'discord_{period}') if prev_state else None
 
         try:
-            msg_id = _send(period, period_mods, filename, existing_id, base)
+            msg_id = _send(period, period_mods, filename, existing_id, base, verbose=verbose)
         except Exception as e:
-            print(f'[warn] failed to post {period}: {e}')
+            print(f'[warn] failed to post {period}: {e!r}')
             msg_id = existing_id
 
         message_ids[f'discord_{period}'] = msg_id

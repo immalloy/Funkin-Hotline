@@ -33,7 +33,7 @@ def _center_crop_square(img, size):
     top = (h - min_dim) // 2
     return img.crop((left, top, left + min_dim, top + min_dim)).resize((size, size))
 
-def create_collage(mods, size=240):
+def create_collage(mods, size=240, verbose=False):
     if not HAS_PIL:
         return None
 
@@ -53,8 +53,9 @@ def create_collage(mods, size=240):
             if av_url and 'defaults/avatar' not in av_url:
                 _paste_avatar(img, _load_avatar(av_url))
             images.append(img)
-        except Exception:
-            pass
+        except Exception as exc:
+            if verbose:
+                print(f'[warn] collage image skipped for {mod.get("_sName", "unknown mod")!r}: {exc}')
 
     if not images:
         return None

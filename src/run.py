@@ -1,12 +1,48 @@
+import argparse
+import os
 import sys
+import time
 from gamebanana import fetch_top_subs, get_state_key, PERIODS
 from discord import post_to_discord
+from collage import create_collage
 from state import get_state, save_state
 
-def main():
+def parse_args():
+    parser = argparse.ArgumentParser(description='Post GameBanana FNF rankings to Discord.')
+    parser.add_argument('--dry-run', action='store_true', help='Create local collage previews without posting or changing state.')
+    parser.add_argument('--output-dir', default='local-previews', help='Directory for dry-run collage PNGs (default: local-previews).')
+    parser.add_argument('--state-file', help='Use a different state file, useful for local testing.')
+    parser.add_argument('--verbose', action='store_true', help='Show individual image-download failures.')
+    parser.add_argument('--loop', action='store_true', help='Keep running and update rankings on an interval.')
+    parser.add_argument('--interval-hours', type=float, default=2, help='Hours between loop runs (default: 2).')
+    return parser.parse_args()
+
+def write_previews(mods, output_dir, verbose=False):
+    os.makedirs(output_dir, exist_ok=True)
+    created = 0
+    for period in PERIODS:
+        period_mods = mods.get(period, [])
+        if not period_mods:
+            continue
+        image = create_collage(period_mods, verbose=verbose)
+        if not image:
+            print(f'[warn] no collage created for {period}')
+            continue
+        output_path = os.path.join(output_dir, f'collage_{period}.png')
+        with open(output_path, 'wb') as output:
+            output.write(image.read())
+        print(f'[ok] preview {output_path}')
+        created += 1
+    print(f'[done] created {created} local preview(s)')
+
+def run_once(args):
     mods = fetch_top_subs()
+    if args.dry_run:
+        write_previews(mods, args.output_dir, args.verbose)
+        return
+
     new_state = get_state_key(mods)
-    prev_state = get_state() or {}
+    prev_state = get_state(args.state_file) or {}
 
     changed_mods = {}
     discord_ids = {}
@@ -20,14 +56,33 @@ def main():
             changed_mods[period] = []
 
     if any(changed_mods.get(period) for period in PERIODS):
-        discord_ids.update(post_to_discord(changed_mods, prev_state))
+        discord_ids.update(post_to_discord(changed_mods, prev_state, args.verbose))
         print('[ok] discord')
     else:
         print('[ok] discord skipped')
 
     new_state.update(discord_ids)
-    save_state(new_state)
+    save_state(new_state, args.state_file)
     print('[done] state saved')
+
+def main():
+    args = parse_args()
+    if not args.loop:
+        run_once(args)
+        return
+
+    if args.interval_hours <= 0:
+        raise ValueError('--interval-hours must be greater than zero')
+
+    interval_seconds = args.interval_hours * 60 * 60
+    print(f'[ok] loop started; running every {args.interval_hours:g} hour(s)')
+    while True:
+        try:
+            run_once(args)
+        except Exception as exc:
+            print(f'[fatal] run failed: {exc}', file=sys.stderr)
+        print(f'[ok] next run in {args.interval_hours:g} hour(s)')
+        time.sleep(interval_seconds)
 
 if __name__ == '__main__':
     try:
