@@ -51,7 +51,11 @@ def create_collage(mods, size=240, verbose=False):
             submitter = mod.get('_aSubmitter', {})
             av_url = submitter.get('_sAvatarUrl')
             if av_url and 'defaults/avatar' not in av_url:
-                _paste_avatar(img, _load_avatar(av_url))
+                try:
+                    _paste_avatar(img, _load_avatar(av_url))
+                except Exception as exc:
+                    if verbose:
+                        print(f'[warn] avatar skipped for {mod.get("_sName", "unknown mod")!r}: {exc}')
             images.append(img)
         except Exception as exc:
             if verbose:

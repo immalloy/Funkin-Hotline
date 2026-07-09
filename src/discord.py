@@ -16,15 +16,15 @@ def _parse_webhook_url(url):
     parts = url.strip('/').split('/')
     return parts[-2], parts[-1]
 
-def _build_embed(period, mods, attachment_name=None):
+def _build_embed(period, mods, attachment_name=None, change_count=None):
     label = get_label(period)
     lines = []
     for i, mod in enumerate(mods):
-        medal = MEDALS[i] if i < len(MEDALS) else f'{i+1}.'
+        rank = i + 1
         author = mod['_aSubmitter']['_sName']
         mod_url = mod['_sProfileUrl']
         safe_name = _esc(mod['_sName']).replace('[', '\\[').replace(']', '\\]')
-        lines.append(f'{medal} **[{safe_name}]({mod_url})** by {_esc(author)}')
+        lines.append(f'**{rank}.** [{safe_name}]({mod_url}) — {_esc(author)}')
 
     embed = {
         'title': f'{label["emoji"]} {label["name"]}',
@@ -33,6 +33,9 @@ def _build_embed(period, mods, attachment_name=None):
         'footer': {'text': 'Funkin Hotline'},
         'timestamp': __import__('datetime').datetime.now().isoformat() + 'Z',
     }
+    if change_count is not None:
+        suffix = 'change' if change_count == 1 else 'changes'
+        embed['footer']['text'] = f'Funkin Hotline · Updated just now · {change_count} ranking {suffix}'
     if attachment_name:
         embed['image'] = {'url': f'attachment://{attachment_name}'}
     return embed
@@ -65,11 +68,11 @@ def _req_multipart(url, fields, image_bytes, filename, method='POST'):
     }
     return urllib.request.Request(url, data=body, headers=headers, method=method)
 
-def _send(period, period_mods, filename, existing_id, base, verbose=False):
+def _send(period, period_mods, filename, existing_id, base, verbose=False, change_count=None):
     image_buf = create_collage(period_mods, verbose=verbose)
     image_bytes = image_buf.read() if image_buf else None
 
-    embed = _build_embed(period, period_mods, filename if image_bytes else None)
+    embed = _build_embed(period, period_mods, filename if image_bytes else None, change_count)
     msg_id = existing_id
 
     if existing_id:
@@ -97,7 +100,7 @@ def _send(period, period_mods, filename, existing_id, base, verbose=False):
 
     return msg_id
 
-def post_to_discord(mods, prev_state, verbose=False):
+def post_to_discord(mods, prev_state, verbose=False, change_counts=None):
     wh_url = os.environ.get('DISCORD_WEBHOOK_URL')
     if not wh_url:
         return {}
@@ -115,7 +118,8 @@ def post_to_discord(mods, prev_state, verbose=False):
         existing_id = prev_state.get(f'discord_{period}') if prev_state else None
 
         try:
-            msg_id = _send(period, period_mods, filename, existing_id, base, verbose=verbose)
+            msg_id = _send(period, period_mods, filename, existing_id, base,
+                           verbose=verbose, change_count=(change_counts or {}).get(period))
         except Exception as e:
             print(f'[warn] failed to post {period}: {e!r}')
             msg_id = existing_id

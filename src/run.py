@@ -37,6 +37,7 @@ def write_previews(mods, output_dir, verbose=False):
 
 def run_once(args):
     mods = fetch_top_subs()
+    print(f'[ok] fetched {sum(len(items) for items in mods.values())} mod(s) across {len(PERIODS)} period(s)')
     if args.dry_run:
         write_previews(mods, args.output_dir, args.verbose)
         return
@@ -45,6 +46,7 @@ def run_once(args):
     prev_state = get_state(args.state_file) or {}
 
     changed_mods = {}
+    change_counts = {}
     discord_ids = {}
     for period in PERIODS:
         discord_key = f'discord_{period}'
@@ -52,11 +54,16 @@ def run_once(args):
             discord_ids[discord_key] = prev_state[discord_key]
         if new_state.get(period) != prev_state.get(period) or not prev_state.get(discord_key):
             changed_mods[period] = mods.get(period, [])
+            old_ids = (prev_state.get(period) or '').split(',')
+            new_ids = (new_state.get(period) or '').split(',')
+            change_counts[period] = sum(
+                old != new for old, new in zip(old_ids, new_ids)
+            ) + abs(len(old_ids) - len(new_ids))
         else:
             changed_mods[period] = []
 
     if any(changed_mods.get(period) for period in PERIODS):
-        discord_ids.update(post_to_discord(changed_mods, prev_state, args.verbose))
+        discord_ids.update(post_to_discord(changed_mods, prev_state, args.verbose, change_counts))
         print('[ok] discord')
     else:
         print('[ok] discord skipped')
