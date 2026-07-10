@@ -4,7 +4,7 @@
 2. **Create a Discord webhook** in your server channel → copy the URL
 3. Go to your fork → **Settings → Secrets and variables → Actions** → add `DISCORD_WEBHOOK_URL` with your webhook URL
 4. Go to **Actions** tab → enable workflows → run "Funkin Mod Rankings" manually to test
-5. It'll auto-run every 2 hours after that
+5. It'll auto-run every hour after that
 
 ## self-hosting
 
@@ -18,7 +18,7 @@ $env:DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/...'
 python src/run.py --loop
 ```
 
-The process runs immediately, then every two hours. Keep it running with a service manager appropriate for the host (for example, Task Scheduler on Windows or systemd on Linux). Use `--interval-hours 1` to change the interval.
+The process runs immediately, then every hour. Keep it running with a service manager appropriate for the host (for example, Task Scheduler on Windows or systemd on Linux). Use `--interval-hours` to choose a different interval.
 
 Do not run this at the same time as GitHub Actions with the same webhook; choose one host so they do not compete to update the messages.
 

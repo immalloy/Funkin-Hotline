@@ -14,7 +14,7 @@ def parse_args():
     parser.add_argument('--state-file', help='Use a different state file, useful for local testing.')
     parser.add_argument('--verbose', action='store_true', help='Show individual image-download failures.')
     parser.add_argument('--loop', action='store_true', help='Keep running and update rankings on an interval.')
-    parser.add_argument('--interval-hours', type=float, default=2, help='Hours between loop runs (default: 2).')
+    parser.add_argument('--interval-hours', type=float, default=1, help='Hours between loop runs (default: 1).')
     return parser.parse_args()
 
 def write_previews(mods, output_dir, verbose=False):

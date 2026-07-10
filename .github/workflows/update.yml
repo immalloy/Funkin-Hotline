@@ -2,7 +2,7 @@ name: Funkin Mod Rankings
 
 on:
   schedule:
-    - cron: "0 */2 * * *"
+    - cron: "17 * * * *"
   workflow_dispatch:
 
 permissions:
