@@ -110,12 +110,16 @@ def post_to_discord(mods, prev_state, verbose=False, change_counts=None):
     message_ids = {}
 
     for period in PERIODS:
-        period_mods = mods.get(period, [])
-        if not period_mods:
+        if period not in mods:
             continue
-
+        period_mods = mods.get(period, [])
         filename = f'collage_{period}.png'
         existing_id = prev_state.get(f'discord_{period}') if prev_state else None
+
+        # Do not create a blank message for a period that has never had one,
+        # but do clear an existing message if the API now returns no entries.
+        if not period_mods and not existing_id:
+            continue
 
         try:
             msg_id = _send(period, period_mods, filename, existing_id, base,

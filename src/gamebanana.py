@@ -26,10 +26,16 @@ def fetch_top_subs():
     result = {p: [] for p in PERIODS}
     for item in data:
         period = item.get('_sPeriod')
-        if period in PERIODS and len(result[period]) < MAX_PER_PERIOD:
-            if SHOW_FLAGGED or item.get('_sInitialVisibility') == 'show':
-                if not _is_blacklisted(item):
-                    result[period].append(item)
+        if period not in PERIODS:
+            continue
+        # Apply filters before the limit so a flagged/blacklisted entry does
+        # not consume a slot that could be filled by the next API result.
+        if not SHOW_FLAGGED and item.get('_sInitialVisibility') != 'show':
+            continue
+        if _is_blacklisted(item):
+            continue
+        if len(result[period]) < MAX_PER_PERIOD:
+            result[period].append(item)
     return result
 
 def get_mod_key(mod):

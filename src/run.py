@@ -59,10 +59,17 @@ def run_once(args):
             change_counts[period] = sum(
                 old != new for old, new in zip(old_ids, new_ids)
             ) + abs(len(old_ids) - len(new_ids))
-        else:
-            changed_mods[period] = []
+        # Unchanged periods are omitted so Discord does not edit them. An
+        # empty list is meaningful only when the period itself changed.
 
-    if any(changed_mods.get(period) for period in PERIODS):
+    # A period can change from populated to empty when GameBanana changes its
+    # result counts. That still needs a Discord edit to clear the old embed.
+    periods_need_update = any(
+        new_state.get(period) != prev_state.get(period)
+        or not prev_state.get(f'discord_{period}')
+        for period in PERIODS
+    )
+    if periods_need_update:
         discord_ids.update(post_to_discord(changed_mods, prev_state, args.verbose, change_counts))
         print('[ok] discord')
     else:
